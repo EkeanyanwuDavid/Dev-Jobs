@@ -12,10 +12,21 @@ const JobListings = ({ isHome = false, searchQuery = "" }) => {
       const apiUrl = isHome ? "/api/jobs?_limit=3" : "/api/jobs";
       try {
         const res = await fetch(apiUrl);
+        if (!res.ok) throw new Error(`API not available ${res.status}`);
         const data = await res.json();
         setJobs(data);
       } catch (err) {
-        console.log("Error fetcing data", err);
+        // fallback to static public/jobs.json (read-only on GH Pages)
+        try {
+          const res2 = await fetch("/jobs.json");
+          const data2 = await res2.json();
+          // json file has shape { jobs: [...] }
+          const list = data2.jobs || data2;
+          setJobs(isHome ? list.slice(0, 3) : list);
+        } catch (err2) {
+          console.log("Failed to load fallback jobs.json", err2);
+          setJobs([]);
+        }
       } finally {
         setLoading(false);
       }
