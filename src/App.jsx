@@ -1,7 +1,7 @@
 import React from "react";
 import {
   Route,
-  createBrowserRouter,
+  createHashRouter,
   createRoutesFromElements,
   RouterProvider,
 } from "react-router-dom";
@@ -14,9 +14,10 @@ import EditJobPage from "./Pages/EditJobPage";
 import JobPage, { jobLoader } from "./Pages/JobPage";
 
 const App = () => {
+  const API = import.meta.env.VITE_API_URL || "/api";
   //Add new Job
   const addJob = async (newJob) => {
-    const res = await fetch("/api/jobs", {
+    const res = await fetch(`${API}/jobs`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -29,12 +30,12 @@ const App = () => {
 
   //DeleteJob
   const deleteJob = async (id) => {
-    const res = await fetch(`/api/jobs/${id}`, {
+    const res = await fetch(`${API}/jobs/${id}`, {
       method: "DELETE",
     });
     console.log(res);
   };
-  const router = createBrowserRouter(
+  const router = createHashRouter(
     createRoutesFromElements(
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Homepage />} />

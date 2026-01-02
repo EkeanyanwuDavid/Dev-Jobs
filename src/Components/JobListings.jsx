@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import JobListing from "./JobListing";
 import Spinner from "./Spinner";
+const API = import.meta.env.VITE_API_URL || "/api";
 const JobListings = ({ isHome = false, searchQuery = "" }) => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -9,7 +10,7 @@ const JobListings = ({ isHome = false, searchQuery = "" }) => {
 
   useEffect(() => {
     const fetchJobs = async () => {
-      const apiUrl = isHome ? "/api/jobs?_limit=3" : "/api/jobs";
+      const apiUrl = isHome ? `${API}/jobs?_limit=3` : `${API}/jobs`;
       try {
         const res = await fetch(apiUrl);
         if (!res.ok) throw new Error(`API not available ${res.status}`);
