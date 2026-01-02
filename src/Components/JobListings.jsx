@@ -2,7 +2,6 @@ import React from "react";
 import { useState, useEffect } from "react";
 import JobListing from "./JobListing";
 import Spinner from "./Spinner";
-const API = import.meta.env.VITE_API_URL || "/api";
 const JobListings = ({ isHome = false, searchQuery = "" }) => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -10,24 +9,13 @@ const JobListings = ({ isHome = false, searchQuery = "" }) => {
 
   useEffect(() => {
     const fetchJobs = async () => {
-      const apiUrl = isHome ? `${API}/jobs?_limit=3` : `${API}/jobs`;
+      const apiUrl = isHome ? "/api/jobs?_limit=3" : "/api/jobs";
       try {
         const res = await fetch(apiUrl);
-        if (!res.ok) throw new Error(`API not available ${res.status}`);
         const data = await res.json();
         setJobs(data);
       } catch (err) {
-        // fallback to static public/jobs.json (read-only on GH Pages)
-        try {
-          const res2 = await fetch("/jobs.json");
-          const data2 = await res2.json();
-          // json file has shape { jobs: [...] }
-          const list = data2.jobs || data2;
-          setJobs(isHome ? list.slice(0, 3) : list);
-        } catch (err2) {
-          console.log("Failed to load fallback jobs.json", err2);
-          setJobs([]);
-        }
+        console.log("Error fetcing data", err);
       } finally {
         setLoading(false);
       }

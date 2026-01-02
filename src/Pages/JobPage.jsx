@@ -105,26 +105,8 @@ const JobPage = ({ deleteJob }) => {
 };
 
 const jobLoader = async ({ params }) => {
-  try {
-    const API = import.meta.env.VITE_API_URL || "/api";
-    const res = await fetch(`${API}/jobs/${params.id}`);
-    if (res.ok) {
-      const data = await res.json();
-      return data;
-    }
-    throw new Error(`API returned ${res.status}`);
-  } catch (err) {
-    // fallback to read-only static data from public/jobs.json
-    try {
-      const res2 = await fetch("/jobs.json");
-      const data2 = await res2.json();
-      const list = data2.jobs || data2;
-      const job = list.find((j) => String(j.id) === String(params.id));
-      return job || null;
-    } catch (err2) {
-      console.error("Failed to load job from fallback jobs.json", err2);
-      return null;
-    }
-  }
+  const res = await fetch(`/api/jobs/${params.id}`);
+  const data = await res.json();
+  return data;
 };
 export { JobPage as default, jobLoader };

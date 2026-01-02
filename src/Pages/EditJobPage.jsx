@@ -2,7 +2,6 @@ import React from "react";
 import { useState } from "react";
 import { useParams, useLoaderData, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-const API = import.meta.env.VITE_API_URL || "/api";
 
 const EditJobPage = () => {
   const { id } = useParams();
@@ -45,7 +44,7 @@ const EditJobPage = () => {
 
     try {
       setSubmitting(true);
-      const res = await fetch(`${API}/jobs/${id}`, {
+      const res = await fetch(`/api/jobs/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedJob),
